@@ -7,3 +7,6 @@ Program that estimates the value of the percolation threshold through the Monte 
 Program that implements two data structure:
 * Double-ended queue or deque (pronounced "deck"), which is a generalization of a stack and a queue that supports adding and removing items from either the front or the back of the data structure.
 * Randomized queue, which is similar to a stack or queue, except that the item removed is chosen uniformly at random from items in the data structure.
+
+## Note
+The file algs4.jar is needed for run the code, thats the reason why is in the repository.
