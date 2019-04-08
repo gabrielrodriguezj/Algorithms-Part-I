@@ -116,10 +116,20 @@ public class FastCollinearPoints {
 		}
 	}
 
+	/**
+	 * Method to create a segment if it not exist.
+	 * 
+	 * @param consecutivePoints Number of consecutive points
+	 * @param activePoint       Point that is part of the line segment; is iterating
+	 *                          over it
+	 * @param points            Points ordered respect activePoint by the slope
+	 * @param begin             index where begin the points to form the line
+	 *                          segment
+	 */
 	private void generateSegment(int consecutivePoints, Point activePoint, Point[] points, int begin) {
-		
+
 		consecutivePoints++;
-		
+
 		// Create the array will contain the points of the line segment
 		Point[] arraySegment = new Point[consecutivePoints];
 		arraySegment[0] = activePoint;
@@ -140,7 +150,7 @@ public class FastCollinearPoints {
 		// Search for p and q repeated
 		if (pointsLineSegment.contains(p)) {
 			for (int i = 0; i < pointsLineSegment.size(); i += 2) {
-				if (pointsLineSegment.get(i).compareTo(p) == 0 && pointsLineSegment.get(i + 1).compareTo(q) == 0) {
+				if (pointsLineSegment.get(i) == p && pointsLineSegment.get(i + 1) == q) {
 					lineSegmentRepeated = true;
 					break;
 				}
