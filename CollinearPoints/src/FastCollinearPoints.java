@@ -125,6 +125,7 @@ public class FastCollinearPoints {
 	 * @param points            Points ordered respect activePoint by the slope
 	 * @param begin             index where begin the points to form the line
 	 *                          segment
+	 * 
 	 */
 	private void generateSegment(int consecutivePoints, Point activePoint, Point[] points, int begin) {
 
@@ -166,6 +167,16 @@ public class FastCollinearPoints {
 			pointsLineSegment.add(p);
 			pointsLineSegment.add(q);
 		}
+
+		// TODO
+		
+		//FIXME Mejorar el tiempo de respueta y pasar de 95 a 100 en la evaluación
+		// - Ver las siguientes sugerencias de los foros:  
+		// - How to get 100/100 grade? 
+		// - FastCollinearPoints passed 8by8 grid timing test but failed on nby1 grid test - 
+		// - 	First, you do not need to create a new class for tracking the index.
+		// - 	Secondly, In a normal process you will need to order the sub-array with the points "q1, q2,.....,qn" that have the same slope (reference to "p") to know if the point "p" is the lowest in segment. So, If you have the possibility to track the index of the points given, you can know if "p" is the lowest point of the segment without ordering the sub-array. This will low the time and the amount of compareTo() calls.
+		// - how to test the same segment?
 	}
 
 	/**
