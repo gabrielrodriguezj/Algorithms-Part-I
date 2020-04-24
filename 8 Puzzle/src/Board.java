@@ -158,7 +158,7 @@ public class Board {
 			ranPos2 = StdRandom.uniform(this.dimension * this.dimension);
 			tile2 = nTo2D(ranPos2);
 			aux = this.blocks[tile2[0]][tile2[1]];
-		} while (aux == 0 && ranPos1 == ranPos2);
+		} while (aux == 0 || ranPos1 == ranPos2);
 
 		Board board = new Board(this.blocks);
 		board.swap(tile1[0], tile1[1], tile2[0], tile2[1]);
