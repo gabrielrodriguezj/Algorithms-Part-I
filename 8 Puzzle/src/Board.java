@@ -1,5 +1,5 @@
-import java.util.Random;
-import java.util.Stack;
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.Stack;
 
 /**
  * Class for representing the behaviour of a square board of the puzzle game; It
@@ -14,18 +14,18 @@ public class Board {
 	/**
 	 * Size of a side of the square board
 	 */
-	private int dimension;
+	private final int dimension;
 
 	/**
 	 * Tiles of the puzzle
 	 */
-	private int[][] blocks;
+	private final int[][] blocks;
 
 	/**
 	 * Board goal, is used for evaluate if the current board its solved and
 	 * calculate the Manhattan distance
 	 */
-	private int[][] goal;
+	private final int[][] goal;
 
 	/**
 	 * Construct a board from an n-by-n array of blocks, where blocks[i][j] = block
@@ -100,7 +100,7 @@ public class Board {
 	 */
 	private int calculateManhattanDistance(int i, int j) {
 		int blockGoal = this.blocks[i][j];
-		int row = (int) (blockGoal / this.dimension);
+		int row = blockGoal / this.dimension;
 		int col = blockGoal % this.dimension;
 		if (col == 0) {
 			row--;
@@ -138,7 +138,7 @@ public class Board {
 	 * @return A twin board
 	 */
 	public Board twin() {
-		Random r = new Random();
+		// StdRandom.setSeed(s);
 		int ranPos1 = 0;
 		int ranPos2 = 0;
 
@@ -148,14 +148,14 @@ public class Board {
 		int aux = 0;
 
 		do {
-			ranPos1 = r.nextInt(this.dimension * this.dimension);
+			ranPos1 = StdRandom.uniform(this.dimension * this.dimension);
 			tile1 = nTo2D(ranPos1);
 			aux = this.blocks[tile1[0]][tile1[1]];
 
 		} while (aux == 0);
 
 		do {
-			ranPos2 = r.nextInt(this.dimension * this.dimension);
+			ranPos2 = StdRandom.uniform(this.dimension * this.dimension);
 			tile2 = nTo2D(ranPos2);
 			aux = this.blocks[tile2[0]][tile2[1]];
 		} while (aux == 0 && ranPos1 == ranPos2);
@@ -181,7 +181,7 @@ public class Board {
 			return pos;
 		}
 
-		int row = (int) (n / this.dimension);
+		int row = n / this.dimension;
 		int col = n % this.dimension;
 		if (col == 0) {
 			row--;
