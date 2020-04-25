@@ -21,12 +21,6 @@ public class Board {
 	private final int[][] blocks;
 
 	/**
-	 * Board goal, is used for evaluate if the current board its solved and
-	 * calculate the Manhattan distance
-	 */
-	private final int[][] goal;
-	
-	/**
 	 * Twin board, is created in the constructor and saved,this with the objective
 	 * to make unmutable the Board class and every time return the same twin board.
 	 */
@@ -41,17 +35,12 @@ public class Board {
 	public Board(int[][] blocks) {
 		this.dimension = blocks.length;
 		this.blocks = new int[this.dimension][this.dimension];
-		this.goal = new int[this.dimension][this.dimension];
 
 		for (int i = 0; i < this.dimension; i++) {
 			for (int j = 0; j < this.dimension; j++) {
 				this.blocks[i][j] = blocks[i][j];
-				this.goal[i][j] = (i * this.dimension) + j + 1;
 			}
 		}
-
-		// The last block is the empty block
-		this.goal[this.dimension - 1][this.dimension - 1] = 0;
 	}
 
 	public int dimension() {
@@ -67,7 +56,7 @@ public class Board {
 		int outOfPlace = 0;
 		for (int i = 0; i < this.dimension; i++) {
 			for (int j = 0; j < this.dimension; j++) {
-				if (this.blocks[i][j] != this.goal[i][j] && this.blocks[i][j] != 0) {
+				if (this.blocks[i][j] != toGoal(i, j) && this.blocks[i][j] != 0) {
 					outOfPlace++;
 				}
 			}
@@ -86,7 +75,7 @@ public class Board {
 
 		for (int i = 0; i < this.dimension; i++) {
 			for (int j = 0; j < this.dimension; j++) {
-				if (this.blocks[i][j] != this.goal[i][j] && this.blocks[i][j] != 0) {
+				if (this.blocks[i][j] != toGoal(i, j) && this.blocks[i][j] != 0) {
 					distance += calculateManhattanDistance(i, j);
 				}
 			}
@@ -127,13 +116,28 @@ public class Board {
 	public boolean isGoal() {
 		for (int i = 0; i < this.dimension; i++) {
 			for (int j = 0; j < this.dimension; j++) {
-				if (this.blocks[i][j] != this.goal[i][j]) {
+				if (this.blocks[i][j] != toGoal(i, j)) {
 					return false;
 				}
 			}
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Method that converts a tile position to it's expected 
+	 * tile value.
+	 * 
+	 * @param i row of the tile
+	 * @param j column of the tile
+	 * @return goal value
+	 */
+	private int toGoal(int i, int j) {
+		if (i == this.dimension -1 && j == this.dimension - 1)
+			return 0;
+		
+		return i * this.dimension + j + 1;
 	}
 
 	/**
