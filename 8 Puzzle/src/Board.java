@@ -1,4 +1,3 @@
-import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Stack;
 
 /**
@@ -155,27 +154,23 @@ public class Board {
 	 * @return A twin board
 	 */
 	private Board createTwinBoard() {
-		// StdRandom.setSeed(s);
-		int ranPos1 = 0;
-		int ranPos2 = 0;
-
 		int[] tile1;
 		int[] tile2;
-
+		
+		int i = 0;
 		int aux = 0;
-
+		
 		do {
-			ranPos1 = StdRandom.uniform(this.dimension * this.dimension);
-			tile1 = nTo2D(ranPos1);
+			tile1 = nTo2D(i);
 			aux = this.blocks[tile1[0]][tile1[1]];
-
-		} while (aux == 0);
-
+			i++;
+		} while(aux == 0);
+		
 		do {
-			ranPos2 = StdRandom.uniform(this.dimension * this.dimension);
-			tile2 = nTo2D(ranPos2);
+			tile2 = nTo2D(i);
 			aux = this.blocks[tile2[0]][tile2[1]];
-		} while (aux == 0 || ranPos1 == ranPos2);
+			i++;
+		} while (aux == 0);
 
 		Board board = new Board(this.blocks);
 		board.swap(tile1[0], tile1[1], tile2[0], tile2[1]);
@@ -199,13 +194,7 @@ public class Board {
 		}
 
 		int row = n / this.dimension;
-		int col = n % this.dimension;
-		if (col == 0) {
-			row--;
-			col = this.dimension - 1;
-		} else {
-			col--;
-		}
+		int col = n - (row * this.dimension);
 
 		pos[0] = row;
 		pos[1] = col;

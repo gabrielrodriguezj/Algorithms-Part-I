@@ -50,7 +50,7 @@ public class Solver {
 		MinPQ<SearchNode> pqOriginal = new MinPQ<>(snOriginal.nodeComparator());
 		MinPQ<SearchNode> pqTwin = new MinPQ<>(snTwin.nodeComparator());
 		
-		//Is the initial board the solution?
+		// Is the initial board the solution?
 		if (initial.isGoal()) {
 			solution = snOriginal;
 			solvable = true;
