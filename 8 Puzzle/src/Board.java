@@ -164,7 +164,7 @@ public class Board {
 			tile1 = nTo2D(i);
 			aux = this.blocks[tile1[0]][tile1[1]];
 			i++;
-		} while(aux == 0);
+		} while (aux == 0);
 		
 		do {
 			tile2 = nTo2D(i);

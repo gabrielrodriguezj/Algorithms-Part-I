@@ -133,7 +133,7 @@ public class Solver {
 			return solution.moves;
 		}
 		
-		return 0;
+		return -1;
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class Solver {
 			return stack;
 		}
 
-		return new Stack<Board>();
+		return null;
 	}
 
 	/**
