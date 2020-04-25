@@ -7,10 +7,10 @@ import edu.princeton.cs.algs4.StdOut;
 
 /* 
  * Puzzle solver using the A* search algorithms. 
- * 
+ * https://en.wikipedia.org/wiki/15_puzzle
  * 
  * @author gabrielrodriguezj
- *
+ * 
  */
 public class Solver {
 	
@@ -18,9 +18,22 @@ public class Solver {
 	 * SearchNode which contains the solution
 	 */
 	private SearchNode solution = null;
+	
+	/**
+	 * Is solvable the board provided
+	 */
+	private boolean solvable = false;
 
 	/**
-	 * Find a solution to the initial board (using the A* algorithm)
+	 * Find a solution to the initial board (using the A* algorithm).
+	 * Not all initial boards can lead to the goal board by a sequence of moves. 
+	 * To detect such situations, use the fact that boards are divided into two equivalence
+	 * classes with respect to reachability:
+	 *    Those that can lead to the goal board
+	 *    Those that can lead to the goal board if we modify the initial board 
+	 *    by swapping any pair of tiles
+	 * So, if the initial board is solvable, none of its twins will have a solution 
+	 * Also, if the initial board is unsolvable, all of its twins are solvable.
 	 * 
 	 * @param initial Initial Board
 	 */
@@ -29,31 +42,75 @@ public class Solver {
 		if (initial == null)
 			throw new IllegalArgumentException("The initial board must not be null");
 		
-		boolean solved = false;
-		SearchNode sn = new SearchNode(initial, 0, null);		
-		MinPQ<SearchNode> pq = new MinPQ<>(sn.nodeComparator());
+		boolean solvedOriginal = false;
+		boolean solvedTwin = false;
 		
-		pq.insert(sn);		
+		SearchNode snOriginal = new SearchNode(initial, 0, null);
+		SearchNode snTwin = new SearchNode(initial.twin(), 0, null);
+		MinPQ<SearchNode> pqOriginal = new MinPQ<>(snOriginal.nodeComparator());
+		MinPQ<SearchNode> pqTwin = new MinPQ<>(snTwin.nodeComparator());
+		
+		//Is the initial board the solution?
+		if (initial.isGoal()) {
+			solution = snOriginal;
+			solvable = true;
+			return;
+		}
+		
+		if (snTwin.board.isGoal()) {
+			solvable = false;
+			return;
+		}
+		
+		// If the initianl or the twin board are not the goal go ahead with the A* algorithm
+		
+		pqOriginal.insert(snOriginal);
+		pqTwin.insert(snTwin);
+		
 		while (true) {
-			SearchNode snMin = pq.delMin();
+			snOriginal = pqOriginal.delMin();
+			snTwin = pqTwin.delMin();
 			
-			for (Board b : snMin.board.neighbors()) {
+			// Processing the original board solution
+			for (Board b : snOriginal.board.neighbors()) {
 				
 				if (b.isGoal()) {
-					solved = true;
-					solution = new SearchNode(b, snMin.moves + 1, snMin);
+					solvedOriginal = true;
+					solution = new SearchNode(b, snOriginal.moves + 1, snOriginal);
+					solvable = true;
 					break;
 				}	
 				
 				// If is not equal to predecessor board
-				if (!b.equals(snMin.board)) {
-					SearchNode snTemp = new SearchNode(b, snMin.moves + 1, snMin);
-					pq.insert(snTemp);
+				if (!b.equals(snOriginal.board)) {
+					SearchNode snTemp = new SearchNode(b, snOriginal.moves + 1, snOriginal);
+					pqOriginal.insert(snTemp);
 				}
 			}
 			
-			if (solved)
+			// Process the twin board if not found the solution in the original one
+			if (!solvedOriginal) {
+				// Processing the twin board solution
+				for (Board b : snTwin.board.neighbors()) {
+					
+					if (b.isGoal()) {
+						solvedTwin = true;
+						// solution = new SearchNode(b, snTwin.moves + 1, snTwin);
+						break;
+					}
+					
+					if (!b.equals(snTwin.board)) {
+						SearchNode snTemp = new SearchNode(b, snTwin.moves + 1, snTwin);
+						pqTwin.insert(snTemp);
+					}
+				}
+			}
+			
+			
+			if (solvedOriginal || solvedTwin) {
 				break;
+			}
+				
 		}
 	}
 
@@ -63,7 +120,7 @@ public class Solver {
 	 * @return True if the initial board is solvable
 	 */
 	public boolean isSolvable() {
-		return true;
+		return solvable;
 	}
 
 	/**
@@ -72,13 +129,8 @@ public class Solver {
 	 * @return  -1 if unsolvable, 0< if is solvable 
 	 */
 	public int moves() {
-		if (!isSolvable()) {
-			return -1;
-		}
-		
-		if (solution != null) {
-			// The last search node is not introduced to the MinPQ in order to reduce one extra iteration
-			return solution.moves + 1;
+		if (isSolvable()) {
+			return solution.moves;
 		}
 		
 		return 0;

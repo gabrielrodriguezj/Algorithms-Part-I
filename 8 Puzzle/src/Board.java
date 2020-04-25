@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Stack;
 
 /**
- * Class for representing the behaviour of a square board of the puzzle game; It
+ * Unmutable class for representing the behaviour of a square board of the puzzle game; It
  * can contains whatever amount (n^2) of tiles;
  * 
  * 
@@ -26,6 +26,12 @@ public class Board {
 	 * calculate the Manhattan distance
 	 */
 	private final int[][] goal;
+	
+	/**
+	 * Twin board, is created in the constructor and saved,this with the objective
+	 * to make unmutable the Board class and every time return the same twin board.
+	 */
+	private Board twin = null;
 
 	/**
 	 * Construct a board from an n-by-n array of blocks, where blocks[i][j] = block
@@ -47,7 +53,6 @@ public class Board {
 
 		// The last block is the empty block
 		this.goal[this.dimension - 1][this.dimension - 1] = 0;
-
 	}
 
 	public int dimension() {
@@ -133,11 +138,23 @@ public class Board {
 	}
 
 	/**
-	 * Create a board that is obtained by exchanging any pair (randomly) of blocks
+	 * Access to the board twin
 	 * 
 	 * @return A twin board
 	 */
 	public Board twin() {
+		if (twin == null)
+			twin = createTwinBoard();
+		
+		return twin;
+	}
+	
+	/**
+	 * Create a board that is obtained by exchanging any pair (randomly) of blocks
+	 * 
+	 * @return A twin board
+	 */
+	private Board createTwinBoard() {
 		// StdRandom.setSeed(s);
 		int ranPos1 = 0;
 		int ranPos2 = 0;
