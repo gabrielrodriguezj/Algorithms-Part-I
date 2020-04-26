@@ -208,8 +208,12 @@ public class Solver {
 		 */
 		private final SearchNode previous;
 		
+		private final int priorityFunction;
+		
 		/**
-		 * Default constructor
+		 * Default constructor. Every search node save the priority function value
+		 * in order to reduce the amount of access to manhattan or hamming value
+		 * in the board object.
 		 * 
 		 * @param board Current board
 		 * @param moves Amount of movements to rich the current board
@@ -219,6 +223,9 @@ public class Solver {
 			this.board = board;
 			this.moves = moves;
 			this.previous = previous;
+			this.priorityFunction = moves + board.manhattan();
+			//this.priorityFunction = moves + board.hamming();
+			
 		}
 	}
 	
@@ -231,16 +238,10 @@ public class Solver {
 	private class SearchNodeComparator implements Comparator<SearchNode> {
 		@Override
 		public int compare(SearchNode searchNode1, SearchNode searchNode2) {
-			
-			int priorityFuncionSN1 = searchNode1.moves + searchNode1.board.manhattan();
-			// int priorityFuncionSN1 = searchNode1.moves + searchNode1.board.hamming();
-			int priorityFuncionSN2 = searchNode2.moves + searchNode2.board.manhattan();
-			// int priorityFuncionSN2 = searchNode2.moves + searchNode2.board.hamming();
-			
-			if (priorityFuncionSN1 < priorityFuncionSN2)
+			if (searchNode1.priorityFunction < searchNode2.priorityFunction)
 				return -1;
 			
-			if (priorityFuncionSN1 > priorityFuncionSN2)
+			if (searchNode1.priorityFunction > searchNode2.priorityFunction)
 				return 1;
 			
 			return 0;
