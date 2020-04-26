@@ -282,14 +282,14 @@ public class Board {
 	 * 
 	 * @return True if two boards are equals.
 	 */
-	public boolean equals(Object o) {
-		if (o == this)
+	public boolean equals(Object obj) {
+		if (obj == this)
 			return true;
-		if (o == null)
+		if (obj == null)
 			return false;
-		if (o.getClass() != this.getClass())
+		if (obj.getClass() != this.getClass())
 			return false;
-		Board that = (Board) o;
+		Board that = (Board) obj;
 
 		if (this.dimension != that.dimension)
 			return false;
@@ -395,7 +395,7 @@ public class Board {
 		if (direction == 4)
 			return swap(i, j, i, ++j);
 		
-		return new int[this.dimension][this.dimension];
+		return cloneArray(this.blocks);
 	}
 
 	/**
