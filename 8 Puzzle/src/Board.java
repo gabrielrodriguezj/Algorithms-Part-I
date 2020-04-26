@@ -1,4 +1,6 @@
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdOut;
 
 /**
  * Unmutable class for representing the behaviour of a square board of the puzzle game; It
@@ -19,6 +21,16 @@ public class Board {
 	 * Tiles of the puzzle
 	 */
 	private final int[][] blocks;
+	
+	/**
+	 * Save the hamming distance
+	 */
+	private int hamming;
+	
+	/**
+	 * Save the manhattan distance
+	 */
+	private int manhattan;
 
 	/**
 	 * Twin board, is created in the constructor and saved,this with the objective
@@ -41,6 +53,10 @@ public class Board {
 				this.blocks[i][j] = blocks[i][j];
 			}
 		}
+		
+		// calculate Hamming and Manhattan distance
+		hamming = calculateHammingDistance();
+		manhattan = calculateManhattanDistance();
 	}
 
 	public int dimension() {
@@ -48,11 +64,20 @@ public class Board {
 	}
 
 	/**
-	 * Method for calculate the number of blocks out of place
+	 * Method that returns the hamming distance of the board
 	 * 
 	 * @return number of blocks out of place
 	 */
 	public int hamming() {
+		return hamming;
+	}
+	
+	/**
+	 * Method for calculate the number of blocks out of place (in the wrong position)
+	 * 
+	 * @return number of blocks out of place
+	 */
+	private int calculateHammingDistance() {
 		int outOfPlace = 0;
 		for (int i = 0; i < this.dimension; i++) {
 			for (int j = 0; j < this.dimension; j++) {
@@ -66,11 +91,20 @@ public class Board {
 	}
 
 	/**
+	 * Method that returns the manhattan distance of the board
+	 * 
+	 * @return number of blocks out of place
+	 */
+	public int manhattan() {
+		return manhattan;
+	}
+	
+	/**
 	 * Method for calculate the sum of Manhattan distances between blocks and goal
 	 * 
 	 * @return Sum of Manhattan distances between blocks and goal
 	 */
-	public int manhattan() {
+	private int calculateManhattanDistance() {
 		int distance = 0;
 
 		for (int i = 0; i < this.dimension; i++) {
@@ -101,13 +135,13 @@ public class Board {
 		} else {
 			col--;
 		}
-
+		
 		int manhattanDistance = 0;
 		manhattanDistance = Math.abs(i - row) + Math.abs(j - col);
 
 		return manhattanDistance;
 	}
-
+	
 	/**
 	 * Determine if the current board is the goal
 	 * 
@@ -176,16 +210,17 @@ public class Board {
 			i++;
 		} while (aux == 0);
 
-		Board board = new Board(this.blocks);
-		board.swap(tile1[0], tile1[1], tile2[0], tile2[1]);
+		
+		int[][] newBlock = swap(tile1[0], tile1[1], tile2[0], tile2[1]);
+		Board board = new Board(newBlock);
 
 		return board;
 	}
 
 	/**
-	 * Given a tile value, calculate the expected position in the board
+	 * Given a 1D position, calculate it's 2D position in the board
 	 * 
-	 * @param n Tile value
+	 * @param n 1D position
 	 * @return Array with index 0 = row and index 1 = column 
 	 */
 	private int[] nTo2D(int n) {
@@ -213,12 +248,33 @@ public class Board {
 	 * @param j1 Column of tile 1
 	 * @param i2 Row of tile 2
 	 * @param j2 Column of tile 2
+	 * @return New block with the tiles swaped
 	 */
-	private void swap(int i1, int j1, int i2, int j2) {
-		int tile1 = this.blocks[i1][j1];
-		int tile2 = this.blocks[i2][j2];
-		this.blocks[i1][j1] = tile2;
-		this.blocks[i2][j2] = tile1;
+	private int[][] swap(int i1, int j1, int i2, int j2) {
+		// Create a copy of the board, the class is inmutable
+		int[][] newBlock = cloneArray(this.blocks);
+		
+		int tile1 = newBlock[i1][j1];
+		int tile2 = newBlock[i2][j2];
+		newBlock[i1][j1] = tile2;
+		newBlock[i2][j2] = tile1;
+		
+		return newBlock;
+	}
+	
+	/**
+	 * Clone an array
+	 * 
+	 * @param src Array to be cloned
+	 * @return Arry cloned
+	 */
+	private int[][] cloneArray(int[][] src) {
+	    int length = src.length;
+	    int[][] target = new int[length][src[0].length];
+	    for (int i = 0; i < length; i++) {
+	        System.arraycopy(src[i], 0, target[i], 0, src[i].length);
+	    }
+	    return target;
 	}
 
 	/**
@@ -291,26 +347,26 @@ public class Board {
 		Stack<Board> stack = new Stack<>();
 
 		if (up) {
-			Board board = new Board(this.blocks);
-			board.move(1, i, j);
+			int[][] newBlock = move(1, i, j);
+			Board board = new Board(newBlock);
 			stack.push(board);
 		}
 
 		if (down) {
-			Board board = new Board(this.blocks);
-			board.move(2, i, j);
+			int[][] newBlock = move(2, i, j);
+			Board board = new Board(newBlock);
 			stack.push(board);
 		}
 
 		if (left) {
-			Board board = new Board(this.blocks);
-			board.move(3, i, j);
+			int[][] newBlock = move(3, i, j);
+			Board board = new Board(newBlock);
 			stack.push(board);
 		}
 
 		if (right) {
-			Board board = new Board(this.blocks);
-			board.move(4, i, j);
+			int[][] newBlock = move(4, i, j);
+			Board board = new Board(newBlock);
 			stack.push(board);
 		}
 
@@ -323,20 +379,23 @@ public class Board {
 	 * @param direction Direction 1 - 4
 	 * @param i Row of the blank space
 	 * @param j Column of the blank space
+	 * @return New block with the the tiles moved
 	 */
-	private void move(int direction, int i, int j) {
+	private int[][] move(int direction, int i, int j) {
 		/*
 		 * up = 1; down = 2; left = 3; right = 4;
 		 */
 
 		if (direction == 1)
-			swap(i, j, --i, j);
+			return swap(i, j, --i, j);
 		if (direction == 2)
-			swap(i, j, ++i, j);
+			return swap(i, j, ++i, j);
 		if (direction == 3)
-			swap(i, j, i, --j);
+			return swap(i, j, i, --j);
 		if (direction == 4)
-			swap(i, j, i, ++j);
+			return swap(i, j, i, ++j);
+		
+		return new int[this.dimension][this.dimension];
 	}
 
 	/**
@@ -353,5 +412,71 @@ public class Board {
 		}
 
 		return s.toString();
+	}
+	
+	/**
+	 * Board tester
+	 * 
+	 * @param args Text file path containing the board information
+	 */
+	public static void main(String[] args) {
+		
+		// int[][] tiles = new int[][] {{5, 8, 7}, {1, 0, 6}, {3, 4, 2 }};
+		// int[][] tiles = new int[][] {{2, 1}, {3, 0}};
+		
+		/* int[][] tiles = new int[][] {
+		{1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 ,10 },
+		{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, 
+		{21, 22, 23, 24, 25, 26, 27, 28, 29, 30}, 
+		{31, 32, 33, 34, 35, 36, 37, 38, 39, 40}, 
+		{41, 42, 43, 44, 45, 46, 47, 48, 49, 50}, 
+		{51, 52, 53, 54, 55, 56, 57, 58, 59, 60}, 
+		{61, 62, 63, 64, 65, 66, 67, 68, 69, 70}, 
+		{71, 72, 73, 74, 75, 76, 87, 77, 78, 80}, 
+		{81, 82, 83, 84, 85, 86, 88,  0, 79, 90}, 
+		{91, 92, 93, 94, 95, 96, 97, 98, 89, 99}}; */
+		
+		// int[][] tiles = new int[][] {{8, 1, 3}, {4, 0, 2}, {7, 6, 5 }};
+		// int[][] tiles = new int[][] {{5, 8, 7}, {1, 4, 6}, {3, 2, 0 }};
+		
+		// int[][] tiles = new int[][] {{5, 8, 7}, {0, 1, 6}, {3, 4, 2 }};
+		// int[][] tiles = new int[][] {{5, 8, 0}, {1, 4, 7}, {3, 2, 6 }};
+		
+		
+		/* int[][] tiles = new int[][] {
+		{1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 ,10 },
+		{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, 
+		{21, 22, 23, 24, 25, 26, 27, 28, 29, 30}, 
+		{31, 32, 33, 34, 35, 36, 37, 38, 39, 40}, 
+		{41, 42, 43, 44, 45, 46, 47, 48, 49, 50}, 
+		{51, 52, 53, 54, 55, 56, 57, 58, 59, 60}, 
+		{61, 62, 63, 64, 65, 66, 67, 68, 69, 70}, 
+		{71, 72, 73, 74, 75, 76, 77, 78, 79, 80}, 
+		{81, 82, 83, 84, 85, 86, 87, 98, 88, 89}, 
+		{91, 92, 93, 94,  0, 95, 96, 97, 99, 90}}; */
+		
+		// int[][] tiles = new int[][] {{5, 8, 7}, {1, 4, 6}, {3, 0, 2}};
+		
+		// tiles = new int[][] {{5, 8, 7}, {1, 4, 6}, {3, 2, 0}};
+		
+		// Board initial = new Board(tiles);
+		
+		
+		// StdOut.println(initial);
+		// initial.prueba(tiles);
+		
+		// Board initial2 = new Board(tiles);
+		// StdOut.println(initial2);
+
+		
+		// create initial board from file
+	    In in = new In(args[0]);
+	    int n = in.readInt();
+	    int[][] tiles = new int[n][n];
+	    for (int i = 0; i < n; i++)
+	        for (int j = 0; j < n; j++)
+	            tiles[i][j] = in.readInt();
+	    Board initial = new Board(tiles);
+	    StdOut.println(initial);
 	}
 }

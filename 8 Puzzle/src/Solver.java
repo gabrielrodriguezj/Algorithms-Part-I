@@ -47,8 +47,8 @@ public class Solver {
 		
 		SearchNode snOriginal = new SearchNode(initial, 0, null);
 		SearchNode snTwin = new SearchNode(initial.twin(), 0, null);
-		MinPQ<SearchNode> pqOriginal = new MinPQ<>(snOriginal.nodeComparator());
-		MinPQ<SearchNode> pqTwin = new MinPQ<>(snTwin.nodeComparator());
+		MinPQ<SearchNode> pqOriginal = new MinPQ<>(new SearchNodeComparator());
+		MinPQ<SearchNode> pqTwin = new MinPQ<>(new SearchNodeComparator());
 		
 		// Is the initial board the solution?
 		if (initial.isGoal()) {
@@ -179,8 +179,10 @@ public class Solver {
 	        StdOut.println("No solution possible");
 	    else {
 	        StdOut.println("Minimum number of moves = " + solver.moves());
-	        for (Board board : solver.solution())
-	            StdOut.println(board);
+	        for (Board board : solver.solution()) {
+	        	StdOut.println(board);
+	        }
+	        	
 	    }
 	}
 	
@@ -217,15 +219,6 @@ public class Solver {
 			this.board = board;
 			this.moves = moves;
 			this.previous = previous;
-		}
-		
-		/**
-		 * Comparator instance
-		 * 
-		 * @return Search node comparator
-		 */
-		public Comparator<SearchNode> nodeComparator() {
-			return new SearchNodeComparator();
 		}
 	}
 	
