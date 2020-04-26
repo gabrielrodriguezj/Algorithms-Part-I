@@ -282,14 +282,14 @@ public class Board {
 	 * 
 	 * @return True if two boards are equals.
 	 */
-	public boolean equals(Object y) {
-		if (y == this)
+	public boolean equals(Object o) {
+		if (o == this)
 			return true;
-		if (y == null)
+		if (o == null)
 			return false;
-		if (y.getClass() != this.getClass())
+		if (o.getClass() != this.getClass())
 			return false;
-		Board that = (Board) y;
+		Board that = (Board) o;
 
 		if (this.dimension != that.dimension)
 			return false;
@@ -420,55 +420,6 @@ public class Board {
 	 * @param args Text file path containing the board information
 	 */
 	public static void main(String[] args) {
-		
-		// int[][] tiles = new int[][] {{5, 8, 7}, {1, 0, 6}, {3, 4, 2 }};
-		// int[][] tiles = new int[][] {{2, 1}, {3, 0}};
-		
-		/* int[][] tiles = new int[][] {
-		{1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 ,10 },
-		{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, 
-		{21, 22, 23, 24, 25, 26, 27, 28, 29, 30}, 
-		{31, 32, 33, 34, 35, 36, 37, 38, 39, 40}, 
-		{41, 42, 43, 44, 45, 46, 47, 48, 49, 50}, 
-		{51, 52, 53, 54, 55, 56, 57, 58, 59, 60}, 
-		{61, 62, 63, 64, 65, 66, 67, 68, 69, 70}, 
-		{71, 72, 73, 74, 75, 76, 87, 77, 78, 80}, 
-		{81, 82, 83, 84, 85, 86, 88,  0, 79, 90}, 
-		{91, 92, 93, 94, 95, 96, 97, 98, 89, 99}}; */
-		
-		// int[][] tiles = new int[][] {{8, 1, 3}, {4, 0, 2}, {7, 6, 5 }};
-		// int[][] tiles = new int[][] {{5, 8, 7}, {1, 4, 6}, {3, 2, 0 }};
-		
-		// int[][] tiles = new int[][] {{5, 8, 7}, {0, 1, 6}, {3, 4, 2 }};
-		// int[][] tiles = new int[][] {{5, 8, 0}, {1, 4, 7}, {3, 2, 6 }};
-		
-		
-		/* int[][] tiles = new int[][] {
-		{1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 ,10 },
-		{11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, 
-		{21, 22, 23, 24, 25, 26, 27, 28, 29, 30}, 
-		{31, 32, 33, 34, 35, 36, 37, 38, 39, 40}, 
-		{41, 42, 43, 44, 45, 46, 47, 48, 49, 50}, 
-		{51, 52, 53, 54, 55, 56, 57, 58, 59, 60}, 
-		{61, 62, 63, 64, 65, 66, 67, 68, 69, 70}, 
-		{71, 72, 73, 74, 75, 76, 77, 78, 79, 80}, 
-		{81, 82, 83, 84, 85, 86, 87, 98, 88, 89}, 
-		{91, 92, 93, 94,  0, 95, 96, 97, 99, 90}}; */
-		
-		// int[][] tiles = new int[][] {{5, 8, 7}, {1, 4, 6}, {3, 0, 2}};
-		
-		// tiles = new int[][] {{5, 8, 7}, {1, 4, 6}, {3, 2, 0}};
-		
-		// Board initial = new Board(tiles);
-		
-		
-		// StdOut.println(initial);
-		// initial.prueba(tiles);
-		
-		// Board initial2 = new Board(tiles);
-		// StdOut.println(initial2);
-
-		
 		// create initial board from file
 	    In in = new In(args[0]);
 	    int n = in.readInt();

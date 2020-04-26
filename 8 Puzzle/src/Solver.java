@@ -82,7 +82,7 @@ public class Solver {
 				}	
 				
 				// If is not equal to predecessor board
-				if (!b.equals(snOriginal.board)) {
+				if (snOriginal.previous == null || !b.equals(snOriginal.previous.board)) {
 					SearchNode snTemp = new SearchNode(b, snOriginal.moves + 1, snOriginal);
 					pqOriginal.insert(snTemp);
 				}
@@ -99,7 +99,7 @@ public class Solver {
 						break;
 					}
 					
-					if (!b.equals(snTwin.board)) {
+					if (snTwin.previous == null || !b.equals(snTwin.previous.board)) {
 						SearchNode snTemp = new SearchNode(b, snTwin.moves + 1, snTwin);
 						pqTwin.insert(snTemp);
 					}
