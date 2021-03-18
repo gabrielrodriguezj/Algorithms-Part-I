@@ -6,11 +6,9 @@ import java.util.TreeSet;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.StdOut;
 
 public class PointSET {
-
-	private TreeSet<Point2D> set;
+	private final TreeSet<Point2D> set;
 
 	/**
 	 * Default constructor. Construct an empty set of points.
@@ -84,6 +82,11 @@ public class PointSET {
 	 * @return list of points inside the provided rectangle
 	 */
 	public Iterable<Point2D> range(RectHV rect) {
+		if (rect == null) {
+			throw new IllegalArgumentException();
+		}
+		
+		
 		Iterator<Point2D> iter = set.iterator();
 		ArrayList<Point2D> points = new ArrayList<Point2D>();
 
@@ -109,13 +112,13 @@ public class PointSET {
 			throw new IllegalArgumentException();
 		}
 
-		double distance = Double.MAX_VALUE;
+		double distance = Double.POSITIVE_INFINITY;
 		Point2D nearest = null;
 
 		Iterator<Point2D> iter = set.iterator();
 		while (iter.hasNext()) {
 			Point2D point = iter.next();
-			Double auxDistance = point.distanceTo(p);
+			double auxDistance = point.distanceSquaredTo(p);
 			if (auxDistance < distance) {
 				distance = auxDistance;
 				nearest = point;
